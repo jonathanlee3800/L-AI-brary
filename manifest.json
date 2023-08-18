@@ -1,0 +1,11 @@
+{
+  "name": "librarybuddies",
+  "version": "1.0.0",
+  "description": "skeleton extension",
+  "manifest_version": 3,
+  "author": "librarybuddies",
+  "action": {
+    "default_popup": "src/index.html",
+    "default_title": "ease ur search"
+  }
+}
