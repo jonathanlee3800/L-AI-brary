@@ -10,6 +10,30 @@
 // }
 
 /* test push for matthias */
+
+// function for 
+
+const OPENAI_API_KEY = "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"
+const URL = "https://api.openai.com/v1/chat/completions";
+
+const HEADERS = {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${OPENAI_API_KEY}`
+};
+
+function formatRequestData(prompt, model="gpt-3.5-turbo", req_headers=HEADERS, temperature=0.6){
+    // Function to generate request data
+    return {
+        method: "POST",
+        headers: req_headers,
+        body: JSON.stringify({
+            model: model,
+            messages: [{role:"system", content: prompt}],
+            temperature: temperature,
+        })
+    };
+}
+
 async function generateInitialQuery(query){
     // Returns promise object for json response data
     
@@ -20,26 +44,12 @@ async function generateInitialQuery(query){
     User: ${query}
     ChatGPT: `;
 
-    const OPENAI_API_KEY = "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"
-    const url = "https://api.openai.com/v1/chat/completions";
-    
-    const headers = {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${OPENAI_API_KEY}`
-    };
-      
-    const requestData = {
-        method: "POST",
-        headers: headers,
-        body: JSON.stringify({
-            model: "gpt-3.5-turbo",
-            messages: [{role:"system", content: prompt}],
-            temperature: 0.6,
-        })
-    }
-    
-    return fetch(url, requestData).then(response => response.json());
+    // Uses formatRequestData to generate request Data
+    const requestData = formatRequestData(prompt)
 
+    let response = await fetch(URL, requestData);
+    // Promise object which resolves to Javascript Object (converted from JSON response)
+    return response.json();
 }
 
 console.log(generateInitialQuery("electric cars").then(data => {console.log(data.choices[0].message.content)}))
