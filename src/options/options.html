@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Options</title>
+</head>
+
+<body>
+    <script
+      src="../bootstrap-5.3.1-dist/js/bootstrap.bundle.min.js"
+      defer
+    ></script>
+    <link rel="stylesheet" href="../bootstrap-5.3.1-dist/css/bootstrap.min.css" />
+    <script src="options.js" defer type="module"></script>
+
+    <div class="container-sm">
+      <div class="my-3">
+        <label for="keyInput" class="form-label">OpenAI API Key:</label>
+        <input type="text" id="keyInput" class="form-control" placeholder="your API Key">
+      </div>
+      
+      <button id="configBtn" class="btn btn-primary mb-3">Configure</button>
+      <div class="alert alert-primary" id ="alert" role="alert" style="display: none;">
+        Changes saved!
+      </div> 
+  </div>
+</body>
+</html>

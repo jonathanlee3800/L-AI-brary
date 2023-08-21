@@ -8,6 +8,12 @@
     "default_popup": "src/index.html",
     "default_title": "ease ur search"
   },
+
+  "options_ui": {
+    "page": "src/options/options.html",
+    "open_in_tab": false
+  },
+
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'"
   },
