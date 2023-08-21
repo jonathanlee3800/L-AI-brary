@@ -7,5 +7,9 @@
   "action": {
     "default_popup": "src/index.html",
     "default_title": "ease ur search"
-  }
+  },
+
+  "permissions": [
+    "storage"
+  ]
 }
