@@ -11,15 +11,20 @@
 
 /* test push for matthias */
 
-// function for 
+// catch lack of API Key
+const keyGet = await chrome.storage.sync.get(["OPENAI_API_KEY"]);
+const OPENAI_API_KEY = keyGet.OPENAI_API_KEY;
 
-const OPENAI_API_KEY = "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"
+OPENAI_API_KEY ?? chrome.runtime.openOptionsPage();
+
 const URL = "https://api.openai.com/v1/chat/completions";
 
 const HEADERS = {
     "Content-Type": "application/json",
     "Authorization": `Bearer ${OPENAI_API_KEY}`
 };
+
+console.log(HEADERS);
 
 function formatRequestData(prompt, model="gpt-3.5-turbo", req_headers=HEADERS, temperature=0.6){
     // Function to generate request data
