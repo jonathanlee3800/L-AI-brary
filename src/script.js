@@ -17,7 +17,6 @@ const HEADERS = {
   Authorization: `Bearer ${OPENAI_API_KEY}`,
 };
 
-// PROMPTS ||
 
 function formatRequestData(
   prompt,
@@ -37,7 +36,7 @@ function formatRequestData(
   };
 }
 
-// QUERY FUNCTIONS ||
+// CREATE QUERY FUNCTIONS ||
 
 async function generateQuery(query, promptFn) {
   // Returns promise object for json response data
@@ -54,32 +53,40 @@ async function generateQuery(query, promptFn) {
   return response.json();
 }
 
+
+function getContentFromRes(data) {
+  // Returns text content from generateQuery response object
+  return data.choices[0].message.content;
+}
+
+// REFINE QUERY FUNCTIONS ||
+
+// SEARCH FUNCTIONS ||
+
 // function takes endpoint url and query object with param key-val pairs and returns full url
 
 function formatUrl(url, paramObj) {
-    // use URLSearchParams.toString() method
-    let params = new URLSearchParams({
-        query : `any,contains,${paramObj.query}`,
-        tab : paramObj.tab ?? "Everything",
-        search_scope : paramObj.tab ?? "Everything",
-        vid : "65SMU_INST:SMU_NUI",
-        offset : 0,
-        searchInFullText: true,
+  // use URLSearchParams.toString() method
+  let params = new URLSearchParams({
+      query : `any,contains,${paramObj.query}`,
+      tab : paramObj.tab ?? "Everything",
+      search_scope : paramObj.tab ?? "Everything",
+      vid : "65SMU_INST:SMU_NUI",
+      offset : 0,
+      // searchInFullText: true,
 
-    });
+  });
 
-    let paramString = params.toString();
+  let paramString = params.toString();
 
-    let resURL = url + paramString; 
+  let resURL = url + paramString; 
 
-    // Replace default '+' with SMU's variables
-    // console.log(resURL.replaceAll(/\+/g, "%20").replaceAll(/%2C/g, ","));
+  // Replace default '+' with SMU's variables
+  // console.log(resURL.replaceAll(/\+/g, "%20").replaceAll(/%2C/g, ","));
 
-    return resURL;
+  return resURL;
 
 }
-
-// SEARCH FUNCTIONS ||
 
 function search() {
   var search = document.getElementById("basic-url").value;
@@ -106,6 +113,8 @@ function search() {
     );
   });
 }
+
+
 
 const searchbutton = document.getElementById("submit");
 searchbutton.addEventListener("click", search);
