@@ -61,6 +61,16 @@ function getContentFromRes(data) {
 
 // REFINE QUERY FUNCTIONS ||
 
+function urlToParams(url){
+  let paramString = url.split("?")[1];
+  
+  // url Search Params
+  let params = new URLSearchParams(paramString);
+
+  return Object.fromEntries(params);
+
+}
+
 // SEARCH FUNCTIONS ||
 
 // function takes endpoint url and query object with param key-val pairs and returns full url
@@ -87,6 +97,7 @@ function formatUrl(url, paramObj) {
   return resURL;
 
 }
+
 
 function search() {
   var search = document.getElementById("basic-url").value;
@@ -118,4 +129,11 @@ function search() {
 
 const searchbutton = document.getElementById("submit");
 searchbutton.addEventListener("click", search);
+searchbutton.addEventListener("click", () => {
+  chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
+    let url = tabs[0].url;
+    console.log(urlToParams(url));
+    // use `url` here inside the callback because it's asynchronous!
+  });
+})
 
