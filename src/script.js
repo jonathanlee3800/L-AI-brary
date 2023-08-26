@@ -5,14 +5,15 @@ const keyGet = await chrome.storage.sync.get(["OPENAI_API_KEY"]);
 const OPENAI_API_KEY = keyGet.OPENAI_API_KEY;
 
 OPENAI_API_KEY ?? chrome.runtime.openOptionsPage();
-
+// conseole.log("hellloooooo");
 // OPENAI API ENDPOINTS ||
 
 const URL = "https://api.openai.com/v1/chat/completions";
 const SMU_URL = "https://search.library.smu.edu.sg/discovery/search?";
 const loadButton = document.getElementById("load");
 loadButton.style.display = "none";
-
+//chatlog
+var chathistory = [];
 const HEADERS = {
   "Content-Type": "application/json",
   Authorization: `Bearer ${OPENAI_API_KEY}`,
@@ -27,23 +28,24 @@ function formatRequestData(
 ) {
   // Function to generate request data
   let body = {
-      model: model,
-      messages: [{ role: "system", content: prompt }],
-      temperature: temperature,
-    };
+    model: model,
+    messages: [{ role: "system", content: prompt }],
+    temperature: temperature,
+  };
 
   // if functions array provided, include in object
-  if (functions) {body.functions = functions};
-    
+  if (functions) {
+    body.functions = functions;
+  }
+
   let reqData = {
     method: "POST",
     headers: req_headers,
-    body: JSON.stringify(body)
-};
+    body: JSON.stringify(body),
+  };
 
-  console.log(reqData)
+  console.log(reqData);
   return reqData;
-  
 }
 
 // CREATE QUERY FUNCTIONS ||
@@ -101,6 +103,23 @@ function formatUrl(url, paramObj) {
   return resURL;
 }
 
+//show chathistory
+function showChatHistory(chathistory) {
+  const chatHistoryDiv = document.getElementById("chathistory");
+  chatHistoryDiv.innerHTML = "";
+  chathistory.forEach((data) => {
+    if (data.role == "user") {
+      chatHistoryDiv.appendChild(
+        document.createTextNode("You : " + data.message)
+      );
+    } else {
+      chatHistoryDiv.appendChild(
+        document.createTextNode("System : " + data.message)
+      );
+    }
+    chatHistoryDiv.appendChild(document.createElement("br"));
+  });
+}
 function search() {
   const searchInput = document.getElementById("basic-url");
   const submitButton = document.getElementById("submit");
@@ -109,6 +128,10 @@ function search() {
   loadButton.style.display = "block";
 
   var search = document.getElementById("basic-url").value;
+  chathistory.push({
+    role: "user",
+    message: search,
+  });
   generateQuery(search, altPrompt).then((data) => {
     console.log(data.choices[0].message.content);
     const datares = data.choices[0].message.content.split(" ");
@@ -126,12 +149,17 @@ function search() {
     });
     submitButton.style.display = "block";
     loadButton.style.display = "none";
+    chathistory.push({
+      role: "system",
+      message: data.choices[0].message.content,
+    });
     console.log(query);
-    // window.location.replace(
-    // );
+
     chrome.tabs.update({
       url: `https://search.library.smu.edu.sg/discovery/search?query=any,contains,${query}&tab=Everything&search_scope=Everything&vid=65SMU_INST:SMU_NUI&offset=0`,
     });
+    console.log(chathistory, "chat history");
+    showChatHistory(chathistory);
   });
 }
 
