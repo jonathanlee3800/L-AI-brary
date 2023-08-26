@@ -144,7 +144,12 @@ function formatUrl(url, paramObj) {
 
   return resURL;
 }
-
+function searchPrev(queryparam) {
+  console.log(queryparam);
+  chrome.tabs.update({
+    url: queryparam,
+  });
+}
 //show chathistory
 function showChatHistory(chathistory) {
   const chatHistoryDiv = document.getElementById("chathistory");
@@ -152,22 +157,14 @@ function showChatHistory(chathistory) {
   chathistory.forEach((data) => {
     const messageContainer = document.createElement("div");
     if (data.role == "user") {
-      chatHistoryDiv.appendChild(
-        document.createTextNode("You : " + data.message)
-      );
-    } else {
-      const systemMessage = document.createElement("div");
-      const systemImage = document.createElement("img");
-      systemImage.src = "/assets/mascot.png";
-      systemImage.alt = "System Icon";
-      systemImage.style.height = "25px";
-
-      systemMessage.appendChild(systemImage);
-      systemMessage.appendChild(document.createTextNode(" : " + data.message));
-      messageContainer.appendChild(systemMessage);
-      messageContainer.appendChild(document.createElement("br"));
+      var button = document.createElement("button");
+      button.innerHTML = `Search Query : ${data.message}`;
+      button.className = "list-group-item list-group-item-action";
+      button.onclick = function () {
+        searchPrev(data.url);
+      };
+      chatHistoryDiv.appendChild(button);
     }
-    chatHistoryDiv.appendChild(messageContainer);
   });
 }
 
@@ -199,10 +196,7 @@ async function searchWithFacets(functions, prompt, promptFn) {
   submitButton.style.display = "none";
   loadButton.style.display = "block";
   var search = document.getElementById("basic-url").value;
-  chathistory.push({
-    role: "user",
-    message: search,
-  });
+
   // response from GPT
   let query = await generateQuery(prompt, promptFn);
   let paramObj = responseToParamObj(query);
@@ -215,16 +209,19 @@ async function searchWithFacets(functions, prompt, promptFn) {
 
   Object.assign(paramObj, functionParamObj);
 
+  let formattedUrl = formatUrl(SMU_URL, paramObj);
   chrome.tabs.update({
-    url: formatUrl(SMU_URL, paramObj),
+    url: formattedUrl,
   });
 
   submitButton.style.display = "block";
   loadButton.style.display = "none";
   chathistory.push({
-    role: "system",
-    message: "test message from system",
+    role: "user",
+    message: search,
+    url: formattedUrl,
   });
+
   console.log(chathistory, "CHATHISTORY");
   showChatHistory(chathistory);
 }
@@ -237,28 +234,3 @@ searchbutton.addEventListener("click", () => {
     altPrompt
   );
 });
-
-// generateFunctionQuery(
-//   "search for cars and include book chapters from 2020 to 2022",
-//   [refineTextObj]
-// ).then(
-//   (data) => {
-//     console.log(data);
-//     console.log(formatUrl(SMU_URL, JSON.parse(data.choices[0].message.function_call.arguments)));
-//   },
-//   (reason) => {
-//     console.error(reason); // Error!
-//   }
-// );
-
-// functionQuery(
-//   "electrics cars info from the last 5 years and only show me magazines only",
-//   refineTextObj
-// ).then(
-//   (data) => {
-//     console.log(JSON.parse(data.choices[0].message.function_call.arguments));
-//   },
-//   (reason) => {
-//     console.error(reason); // Error!
-//   }
-// );
