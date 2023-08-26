@@ -176,85 +176,59 @@ function showChatHistory(chathistory) {
     chatHistoryDiv.appendChild(document.createElement("br"));
   });
 }
-function search() {
-  const searchInput = document.getElementById("basic-url");
+
+async function responseToParamObj(resPromise) {
+  // get message from response promise
+  let message = await getMessageFromRes(resPromise);
+  console.log(message);
+
+  // get function call and parse to JS Object
+  let args = JSON.parse(message.function_call.arguments);
+
+  // get facets
+  console.log(args);
+  return args;
+}
+
+
+
+async function searchWithFacets(functions, prompt, promptFn) {
+  // var prompt = document.getElementById("basic-url").value;
   const submitButton = document.getElementById("submit");
   const loadButton = document.getElementById("load");
   submitButton.style.display = "none";
   loadButton.style.display = "block";
-
-  async function responseToParamObj(resPromise) {
-    // get message from response promise
-    let message = await getMessageFromRes(resPromise);
-    console.log(message);
-
-    // get function call and parse to JS Object
-    let args = JSON.parse(message.function_call.arguments);
-
-    // get facets
-    console.log(args);
-    return args;
-  }
-
-  function search() {
-    console.log("check session:", chrome.storage.sync.get("selectionText"));
-    var search = document.getElementById("basic-url").value;
-    chathistory.push({
-      role: "user",
-      message: search,
-    });
-    generateQuery(search, altPrompt).then((data) => {
-      console.log(data.choices[0].message.content);
-      const datares = data.choices[0].message.content.split(" ");
-      console.log(datares);
-      var query = "";
-      const lastItem = datares[datares.length - 1];
-      datares.forEach((element) => {
-        if (element == lastItem) {
-          console.log(element, "last");
-          query = query + element;
-        } else {
-          console.log(element, lastItem, "not last");
-          query = query + element + "%20";
-        }
-      });
-      submitButton.style.display = "block";
-      loadButton.style.display = "none";
-      chathistory.push({
-        role: "system",
-        message: data.choices[0].message.content,
-      });
-      console.log(query);
-
-      chrome.tabs.update({
-        url: `https://search.library.smu.edu.sg/discovery/search?query=any,contains,${query}&tab=Everything&search_scope=Everything&vid=65SMU_INST:SMU_NUI&offset=0`,
-      });
-      console.log(chathistory, "chat history");
-      showChatHistory(chathistory);
-    });
-  }
-
-  async function searchWithFacets(functions, prompt, promptFn) {
-    // var prompt = document.getElementById("basic-url").value;
-
-    // response from GPT
-    let res = await generateFunctionQuery(promptFn(prompt), functions);
-    let paramObj = await responseToParamObj(res);
-
-    chrome.tabs.update({
-      url: formatUrl(SMU_URL, paramObj),
-    });
-  }
-
-  const searchbutton = document.getElementById("submit");
-  searchbutton.addEventListener("click", () => {
-    searchWithFacets(
-      [refineTextObj2],
-      document.getElementById("basic-url").value,
-      altPrompt
-    );
+  var search = document.getElementById("basic-url").value;
+  chathistory.push({
+    role: "user",
+    message: search,
   });
+  // response from GPT
+  let res = await generateFunctionQuery(promptFn(prompt), functions);
+  let paramObj = await responseToParamObj(res);
+
+  chrome.tabs.update({
+    url: formatUrl(SMU_URL, paramObj),
+  });
+  submitButton.style.display = "block";
+  loadButton.style.display = "none";
+  chathistory.push({
+    role: "system",
+    message: "test message from system",
+  });
+  console.log(chathistory, "CHATHISTORY");
+  showChatHistory(chathistory);
 }
+
+const searchbutton = document.getElementById("submit");
+searchbutton.addEventListener("click", () => {
+  searchWithFacets(
+    [refineTextObj2],
+    document.getElementById("basic-url").value,
+    altPrompt
+  );
+});
+
 // generateFunctionQuery(
 //   "search for cars and include book chapters from 2020 to 2022",
 //   [refineTextObj]
