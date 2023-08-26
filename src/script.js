@@ -44,26 +44,6 @@ function formatRequestData(
   
 }
 
-// function formatFunctionRequestData(
-//   functions,
-//   prompt,
-//   model = "gpt-3.5-turbo",
-//   req_headers = HEADERS,
-//   temperature = 0.6
-// ) {
-//   // Function to generate request data
-//   return {
-//     method: "POST",
-//     headers: req_headers,
-//     body: JSON.stringify({
-//       model: model,
-//       messages: [{ role: "system", content: prompt }],
-//       temperature: temperature,
-//       functions: functions,
-//     }),
-//   };
-// }
-
 // CREATE QUERY FUNCTIONS ||
 
 async function generateQuery(query, promptFn) {
