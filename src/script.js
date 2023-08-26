@@ -150,41 +150,47 @@ function showChatHistory(chathistory) {
   const chatHistoryDiv = document.getElementById("chathistory");
   chatHistoryDiv.innerHTML = "";
   chathistory.forEach((data) => {
+    const messageContainer = document.createElement("div");
     if (data.role == "user") {
       chatHistoryDiv.appendChild(
         document.createTextNode("You : " + data.message)
       );
     } else {
-      chatHistoryDiv.appendChild(
-        document.createTextNode("System : " + data.message)
-      );
+      const systemMessage = document.createElement("div");
+      const systemImage = document.createElement("img");
+      systemImage.src = "/assets/mascot.png";
+      systemImage.alt = "System Icon";
+      systemImage.style.height = "25px";
+
+      systemMessage.appendChild(systemImage);
+      systemMessage.appendChild(document.createTextNode(" : " + data.message));
+      messageContainer.appendChild(systemMessage);
+      messageContainer.appendChild(document.createElement("br"));
     }
-    chatHistoryDiv.appendChild(document.createElement("br"));
+    chatHistoryDiv.appendChild(messageContainer);
   });
 }
 
-function responseToParamObj(resData, isFunctionCall=false) {
+function responseToParamObj(resData, isFunctionCall = false) {
   // get message from response promise
-  
+
   let message = getMessageFromRes(resData);
   console.log(message);
 
- // get function call and parse to JS Object
-  
+  // get function call and parse to JS Object
+
   let paramObj = {};
   if (isFunctionCall) {
-    if (message.function_call){
+    if (message.function_call) {
       paramObj = JSON.parse(message.function_call.arguments);
     }
   } else {
-    paramObj = {query: message.content};
+    paramObj = { query: message.content };
   }
 
   // get facets
   return paramObj;
 }
-
-
 
 async function searchWithFacets(functions, prompt, promptFn) {
   // var prompt = document.getElementById("basic-url").value;
@@ -198,17 +204,16 @@ async function searchWithFacets(functions, prompt, promptFn) {
     message: search,
   });
   // response from GPT
-  let query = await generateQuery(prompt, promptFn)
+  let query = await generateQuery(prompt, promptFn);
   let paramObj = responseToParamObj(query);
-  
+
   // response from GPT with function calling
   let funcRes = await generateFunctionQuery(prompt, functions);
-  console.log("funcRes")
+  console.log("funcRes");
   console.log(funcRes);
   let functionParamObj = responseToParamObj(funcRes, true);
 
   Object.assign(paramObj, functionParamObj);
-
 
   chrome.tabs.update({
     url: formatUrl(SMU_URL, paramObj),
