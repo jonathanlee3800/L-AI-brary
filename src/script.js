@@ -6,7 +6,6 @@ const OPENAI_API_KEY = keyGet.OPENAI_API_KEY;
 
 OPENAI_API_KEY ?? chrome.runtime.openOptionsPage();
 
-
 // OPENAI API ENDPOINTS ||
 
 const URL = "https://api.openai.com/v1/chat/completions";
@@ -16,7 +15,6 @@ const HEADERS = {
   "Content-Type": "application/json",
   Authorization: `Bearer ${OPENAI_API_KEY}`,
 };
-
 
 function formatRequestData(
   prompt,
@@ -32,6 +30,7 @@ function formatRequestData(
       model: model,
       messages: [{ role: "system", content: prompt }],
       temperature: temperature,
+      // functions: functions,
     }),
   };
 }
@@ -53,6 +52,11 @@ async function generateQuery(query, promptFn) {
   return response.json();
 }
 
+async function functionQuery(prompt, functions) {
+  const reqdata = formatRequestData(functions, prompt);
+  let response = await fetch(URL, reqdata);
+  return response.json();
+}
 
 function getContentFromRes(data) {
   // Returns text content from generateQuery response object
@@ -68,24 +72,22 @@ function getContentFromRes(data) {
 function formatUrl(url, paramObj) {
   // use URLSearchParams.toString() method
   let params = new URLSearchParams({
-      query : `any,contains,${paramObj.query}`,
-      tab : paramObj.tab ?? "Everything",
-      search_scope : paramObj.tab ?? "Everything",
-      vid : "65SMU_INST:SMU_NUI",
-      offset : 0,
-      // searchInFullText: true,
-
+    query: `any,contains,${paramObj.query}`,
+    tab: paramObj.tab ?? "Everything",
+    search_scope: paramObj.tab ?? "Everything",
+    vid: "65SMU_INST:SMU_NUI",
+    offset: 0,
+    // searchInFullText: true,
   });
 
   let paramString = params.toString();
 
-  let resURL = url + paramString; 
+  let resURL = url + paramString;
 
   // Replace default '+' with SMU's variables
   // console.log(resURL.replaceAll(/\+/g, "%20").replaceAll(/%2C/g, ","));
 
   return resURL;
-
 }
 
 function search() {
@@ -108,14 +110,15 @@ function search() {
     console.log(query);
     // window.location.replace(
     // );
-    chrome.tabs.update(
-      {url:`https://search.library.smu.edu.sg/discovery/search?query=any,contains,${query}&tab=Everything&search_scope=Everything&vid=65SMU_INST:SMU_NUI&offset=0`},
-    );
+    chrome.tabs.update({
+      url: `https://search.library.smu.edu.sg/discovery/search?query=any,contains,${query}&tab=Everything&search_scope=Everything&vid=65SMU_INST:SMU_NUI&offset=0`,
+    });
   });
 }
-
-
 
 const searchbutton = document.getElementById("submit");
 searchbutton.addEventListener("click", search);
 
+// functionQuery("electrics cars", refineTextObj).then((data) => {
+//   console.log(data.choices[0].message.content);
+// });
