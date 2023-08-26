@@ -1,12 +1,6 @@
-const firstPrompt = query =>
-    `find the main keywords for my prompt. Keep important keywords in the front that directly relate to the query. seperate these keywords with "OR" and keep it to 1 keywords
-      User: i want to seach for more information and articles about Poverty in Asia 
-      ChatGPT: Poverty in Asia
-  
-      User: ${query}
-      ChatGPT: `;
 
-const altPrompt = query => 
+
+const mainPromptFn = query => 
     `write me a library search query, using appropriate boolean operators, parantheses grouping, and wildcards. Make sure the query is as general as possible. Expand common abbreviations. Exclude information about source type (magazine, newspaper, etc.) and publication date.
 
     User: Poverty in Asia magazine articles published in the last 5 years
@@ -17,25 +11,48 @@ const altPrompt = query =>
     
     User: ${query}
     ChatGPT:`;
+    
+const paragraphPrompt = query => 
+    `Following the given text excerpt, your task is to extract the primary themes and topics present within the text. 
+    Formulate a search query that could be used in a library search, incorporating the identified main themes. 
+    Your query should employ suitable boolean operators (AND, OR), use parentheses for grouping, 
+    and integrate wildcards when needed. Aim for a broad and all-encompassing query. 
+    Additionally, expand any commonly used abbreviations. 
+    Exclude any details about the source type (magazine, newspaper, etc.) and the publication date. 
+    It's important to avoid referencing the roles, titles, or positions of individuals.
 
-const refinePrompt = (query, refine) => 
-    `refine the given search query based on the user's instructions. Use appropriate boolean operators, parantheses grouping, and wildcards. Expand common abbreviations.
+    User: Recent advancements in AI have led to debates about its ethical implications and potential for job displacement. 
+    Some experts claim that AI will drastically change the employment landscape by taking over tasks traditionally performed by humans. 
+    This raises concerns about unemployment and the need for upskilling the workforce to be AI-compatible. 
+    On the other hand, proponents of AI argue its potential to create new roles and industries, 
+    leading to job growth in different sectors. The ethical aspect of AI is another major concern, 
+    as the decision-making processes of AI systems are not always transparent. 
+    This lack of transparency poses challenges in various applications, such as autonomous vehicles and medical diagnosis, 
+    where the outcomes of AI decisions can significantly impact human lives.
 
-    Query: Poverty in Asia AND Asian Poverty
-    User: I want to see more relating to Southeast Asia
-    ChatGPT: Poverty in Asia AND Asian Poverty AND (Southeast Asia OR ASEAN)
+    ChatGPT: (Ethical implications OR ethical concerns) AND (AI) AND (job displacement OR employment changes) AND (upskilling OR workforce training) AND (job growth OR new job opportunities) AND (transparency OR opaque decision-making) AND (autonomous vehicles OR medical diagnosis)
     
-    Query: ("presidential elections" OR "presidential polls" OR "presidential campaigns") AND Singapore
-    User: I want to see less results on Indonesia
-    ChatGPT: ("presidential elections" OR "presidential polls" OR "presidential campaigns") AND Singapore NOT Indonesia
-    
-    Query: Electric Cars in Singapore
-    User: I want to see more results about buses specifically
-    ChatGPT:  ("Electric Cars" OR "Electric Vehicles") AND Singapore AND bus*
-    
-    Query: ${query}
-    User: ${refine}
+    User: ${query}
     ChatGPT:`;
+
+// const refinePrompt = (query, refine) => 
+//     `refine the given search query based on the user's instructions. Use appropriate boolean operators, parantheses grouping, and wildcards. Expand common abbreviations.
+
+//     Query: Poverty in Asia AND Asian Poverty
+//     User: I want to see more relating to Southeast Asia
+//     ChatGPT: Poverty in Asia AND Asian Poverty AND (Southeast Asia OR ASEAN)
+    
+//     Query: ("presidential elections" OR "presidential polls" OR "presidential campaigns") AND Singapore
+//     User: I want to see less results on Indonesia
+//     ChatGPT: ("presidential elections" OR "presidential polls" OR "presidential campaigns") AND Singapore NOT Indonesia
+    
+//     Query: Electric Cars in Singapore
+//     User: I want to see more results about buses specifically
+//     ChatGPT:  ("Electric Cars" OR "Electric Vehicles") AND Singapore AND bus*
+    
+//     Query: ${query}
+//     User: ${refine}
+//     ChatGPT:`;
 
 
 //   const prompt = `generate keywords for my prompt. suggest keywords that may relate to the search query, keep important queries in the front that directly relate to the query. seperate these keywords with "OR" and keep it to 10 keywords
