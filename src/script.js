@@ -6,6 +6,8 @@ const OPENAI_API_KEY = keyGet.OPENAI_API_KEY;
 
 OPENAI_API_KEY ?? chrome.runtime.openOptionsPage();
 
+const FACETS = ["rtype"]
+
 // OPENAI API ENDPOINTS ||
 
 const URL = "https://api.openai.com/v1/chat/completions";
@@ -67,9 +69,16 @@ async function generateFunctionQuery(prompt, functions) {
   return response.json();
 }
 
-function getContentFromRes(data) {
+async function getContentFromRes(data) {
   // Returns text content from generateQuery response object
+  let resData = await data;
   return data.choices[0].message.content;
+}
+
+async function getMessageFromRes(data) {
+  // Returns text content from generateQuery response object
+  let resData = await data;
+  return data.choices[0].message
 }
 
 // REFINE QUERY FUNCTIONS ||
@@ -87,7 +96,26 @@ function formatUrl(url, paramObj) {
     vid: "65SMU_INST:SMU_NUI",
     offset: 0,
     // searchInFullText: true,
-  });
+  })
+  
+  if (paramObj.hasOwnProperty("searchcreationdate")){
+    params.append("facet", `searchcreationdate,include,${paramObj.searchcreationdate[0]}|,|${paramObj.searchcreationdate[1]}`);
+  }
+
+  // if key in facets
+  console.log(paramObj);
+
+  let includedFacets = Object.keys(paramObj).filter(item => FACETS.includes(item));
+
+  console.log(includedFacets);
+
+  // For every included facet
+  includedFacets.forEach(key => {
+    // for every item in array
+    paramObj[key].forEach(item => {
+      params.append("mfacet", `${key},include,${item},1`)
+    })
+  })
 
   let paramString = params.toString();
 
@@ -97,6 +125,17 @@ function formatUrl(url, paramObj) {
   // console.log(resURL.replaceAll(/\+/g, "%20").replaceAll(/%2C/g, ","));
 
   return resURL;
+}
+
+async function responseToParamObj(resPromise){
+    // get message from response promise
+    let message = await getMessageFromRes(resPromise);
+
+    // get function call and parse to JS Object
+    let args = JSON.parse(message.function_call.arguments);
+
+    // get facets
+    return args;
 }
 
 function search() {
@@ -125,17 +164,48 @@ function search() {
   });
 }
 
+async function searchWithFacets(functions, prompt){
+  // var prompt = document.getElementById("basic-url").value;
+  
+  // response from GPT
+  let res = await generateFunctionQuery(prompt, functions);
+  let paramObj = await responseToParamObj(res);
+
+  chrome.tabs.update({
+    url: formatUrl(SMU_URL, paramObj)
+  }); 
+
+}
+
 const searchbutton = document.getElementById("submit");
-searchbutton.addEventListener("click", search);
+searchbutton.addEventListener("click", () => {
+  searchWithFacets([refineTextObj], document.getElementById("basic-url").value)
+});
 
 generateFunctionQuery(
-  "electrics cars info from the last 5 years and only show me magazines only",
+  "search for cars and include book chapters from 2020 to 2022",
   [refineTextObj]
 ).then(
   (data) => {
     console.log(data);
+    console.log(formatUrl(SMU_URL, JSON.parse(data.choices[0].message.function_call.arguments)));
   },
   (reason) => {
     console.error(reason); // Error!
   }
 );
+
+
+
+// functionQuery(
+//   "electrics cars info from the last 5 years and only show me magazines only",
+//   refineTextObj
+// ).then(
+//   (data) => {
+//     console.log(JSON.parse(data.choices[0].message.function_call.arguments));
+//   },
+//   (reason) => {
+//     console.error(reason); // Error!
+//   }
+// );
+
