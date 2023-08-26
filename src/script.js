@@ -10,6 +10,8 @@ OPENAI_API_KEY ?? chrome.runtime.openOptionsPage();
 
 const URL = "https://api.openai.com/v1/chat/completions";
 const SMU_URL = "https://search.library.smu.edu.sg/discovery/search?";
+const loadButton = document.getElementById("load");
+loadButton.style.display = "none";
 
 const HEADERS = {
   "Content-Type": "application/json",
@@ -132,22 +134,16 @@ function search() {
         query = query + element + "%20";
       }
     });
+    submitButton.style.display = "block";
+    loadButton.style.display = "none";
     console.log(query);
     // window.location.replace(
     // );
     chrome.tabs.update({
       url: `https://search.library.smu.edu.sg/discovery/search?query=any,contains,${query}&tab=Everything&search_scope=Everything&vid=65SMU_INST:SMU_NUI&offset=0`,
     });
-  ;
-  }
-  
-  )
-  submitButton.style.display = "block";
-  loadButton.style.display = "none";
-} 
- 
-
-
+  });
+}
 
 const searchbutton = document.getElementById("submit");
 searchbutton.addEventListener("click", search);
