@@ -144,22 +144,26 @@ function formatUrl(url, paramObj) {
 
   return resURL;
 }
-
+function searchPrev(queryparam) {
+  console.log(queryparam);
+  chrome.tabs.update({
+    url: queryparam,
+  });
+}
 //show chathistory
 function showChatHistory(chathistory) {
   const chatHistoryDiv = document.getElementById("chathistory");
   chatHistoryDiv.innerHTML = "";
   chathistory.forEach((data) => {
     if (data.role == "user") {
-      chatHistoryDiv.appendChild(
-        document.createTextNode("You : " + data.message)
-      );
       var button = document.createElement("button");
-      button.innerHTML = " Search Query";
-      button.className = "btn btn-primary";
+      button.innerHTML = `Search Query : ${data.message}`;
+      button.className = "list-group-item list-group-item-action";
+      button.onclick = function () {
+        searchPrev(data.url);
+      };
       chatHistoryDiv.appendChild(button);
     }
-    chatHistoryDiv.appendChild(document.createElement("br"));
   });
 }
 
