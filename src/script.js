@@ -154,37 +154,35 @@ function showChatHistory(chathistory) {
       chatHistoryDiv.appendChild(
         document.createTextNode("You : " + data.message)
       );
-    } else {
-      chatHistoryDiv.appendChild(
-        document.createTextNode("System : " + data.message)
-      );
+      var button = document.createElement("button");
+      button.innerHTML = " Search Query";
+      button.className = "btn btn-primary";
+      chatHistoryDiv.appendChild(button);
     }
     chatHistoryDiv.appendChild(document.createElement("br"));
   });
 }
 
-function responseToParamObj(resData, isFunctionCall=false) {
+function responseToParamObj(resData, isFunctionCall = false) {
   // get message from response promise
-  
+
   let message = getMessageFromRes(resData);
   console.log(message);
 
- // get function call and parse to JS Object
-  
+  // get function call and parse to JS Object
+
   let paramObj = {};
   if (isFunctionCall) {
-    if (message.function_call){
+    if (message.function_call) {
       paramObj = JSON.parse(message.function_call.arguments);
     }
   } else {
-    paramObj = {query: message.content};
+    paramObj = { query: message.content };
   }
 
   // get facets
   return paramObj;
 }
-
-
 
 async function searchWithFacets(functions, prompt, promptFn) {
   // var prompt = document.getElementById("basic-url").value;
@@ -193,33 +191,32 @@ async function searchWithFacets(functions, prompt, promptFn) {
   submitButton.style.display = "none";
   loadButton.style.display = "block";
   var search = document.getElementById("basic-url").value;
-  chathistory.push({
-    role: "user",
-    message: search,
-  });
+
   // response from GPT
-  let query = await generateQuery(prompt, promptFn)
+  let query = await generateQuery(prompt, promptFn);
   let paramObj = responseToParamObj(query);
-  
+
   // response from GPT with function calling
   let funcRes = await generateFunctionQuery(prompt, functions);
-  console.log("funcRes")
+  console.log("funcRes");
   console.log(funcRes);
   let functionParamObj = responseToParamObj(funcRes, true);
 
   Object.assign(paramObj, functionParamObj);
 
-
+  let formattedUrl = formatUrl(SMU_URL, paramObj);
   chrome.tabs.update({
-    url: formatUrl(SMU_URL, paramObj),
+    url: formattedUrl,
   });
 
   submitButton.style.display = "block";
   loadButton.style.display = "none";
   chathistory.push({
-    role: "system",
-    message: "test message from system",
+    role: "user",
+    message: search,
+    url: formattedUrl,
   });
+
   console.log(chathistory, "CHATHISTORY");
   showChatHistory(chathistory);
 }
@@ -232,28 +229,3 @@ searchbutton.addEventListener("click", () => {
     altPrompt
   );
 });
-
-// generateFunctionQuery(
-//   "search for cars and include book chapters from 2020 to 2022",
-//   [refineTextObj]
-// ).then(
-//   (data) => {
-//     console.log(data);
-//     console.log(formatUrl(SMU_URL, JSON.parse(data.choices[0].message.function_call.arguments)));
-//   },
-//   (reason) => {
-//     console.error(reason); // Error!
-//   }
-// );
-
-// functionQuery(
-//   "electrics cars info from the last 5 years and only show me magazines only",
-//   refineTextObj
-// ).then(
-//   (data) => {
-//     console.log(JSON.parse(data.choices[0].message.function_call.arguments));
-//   },
-//   (reason) => {
-//     console.error(reason); // Error!
-//   }
-// );
