@@ -6,25 +6,33 @@ let refineTextObj = {
         properties: {
             searchcreationdate: {
                 type: "array",
-                description: `Infer start year and end year based on user's query. Current year is 2023. User: give me results from 2021 to 2023
-                ChatGPT: [2021, 2023]`,
+                description: `start year and end year based on user's query. Only return if sure there is a year. Current year is 2023. example output: [2021, 2023]`,
                 items: {
-                    type: "string",
-                    pattern: "\d{4}",
-                    minItems: 2,
-                    maxItems: 2,
+                    type: "integer",
+                    minimum: 1000,
+                    maximum: 9999
                 },
+                minItems: 2,
+                maxItems: 2,
             },
             rtype: {
                 type: "array",
-                description: "Choose the appropriate types of resource (magazine articles, books, etc.) based on user's query as an array of relevant items",
+                description: "Choose the appropriate types of resource (magazine articles, books, etc.) if the user mentions it.",
                 items: {
                     type: "string",
                     enum: ["magazinearticle", "book_chapters", "articles"],
                 }
             },
+            // relatedTopics: {
+            //     type: "array",
+            //     description: "Come up with 5 related topics in an array",
+            //     items: {
+            //         type : "string",
+            //     }
+            // }
         },
     },
+    // required: ["relatedTopics"]
 };
 
 let refineTextObj2 = {

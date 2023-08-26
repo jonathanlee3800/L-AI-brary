@@ -28,6 +28,14 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
       `Old value was "${oldValue}", new value is "${newValue}".`
     );
   }
+  console.log("changes:",changes.selectionText.newValue);
+  console.log("namespace:",namespace);
+  searchWithFacets(
+    [refineTextObj],
+    changes.selectionText.newValue,
+    paragraphPrompt
+  );
+
 });
 
 function formatRequestData(
@@ -231,6 +239,6 @@ searchbutton.addEventListener("click", () => {
   searchWithFacets(
     [refineTextObj],
     document.getElementById("basic-url").value,
-    altPrompt
+    mainPromptFn
   );
 });

@@ -2,12 +2,13 @@
 // A generic onclick callback function.
 chrome.contextMenus.onClicked.addListener(returnMessage);
 function returnMessage(info, tab) {
-    // if (info.selectionText) {
+    // console.log(chrome.action.openPopup());
+    chrome.storage.sync.set({"selectionText": info.selectionText});
+    console.log("set!");
+        // if (info.selectionText) {
     //     chrome.tabs.sendMessage(tab.id, { greeting: info.selectionText });
     //     console.log("info.selectionText:",info.selectionText);
     // }
-    chrome.storage.sync.set({"selectionText": info.selectionText});
-    console.log("set!");
 }
 // A generic onclick callback function.
 // function genericOnClick(info) {
@@ -16,8 +17,6 @@ function returnMessage(info, tab) {
 
 // };
 
-
-
 chrome.runtime.onInstalled.addListener(function () {
     chrome.contextMenus.create({
         id: "SMUSEARCH",
@@ -25,3 +24,5 @@ chrome.runtime.onInstalled.addListener(function () {
         contexts: ["selection"]
     });
 });
+
+
