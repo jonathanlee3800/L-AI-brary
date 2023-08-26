@@ -20,40 +20,30 @@ const HEADERS = {
 
 function formatRequestData(
   prompt,
+  functions = null,
   model = "gpt-3.5-turbo",
   req_headers = HEADERS,
   temperature = 0.6
 ) {
   // Function to generate request data
-  return {
-    method: "POST",
-    headers: req_headers,
-    body: JSON.stringify({
+  let body = {
       model: model,
       messages: [{ role: "system", content: prompt }],
       temperature: temperature,
-    }),
-  };
-}
+    };
 
-function formatFunctionRequestData(
-  functions,
-  prompt,
-  model = "gpt-3.5-turbo",
-  req_headers = HEADERS,
-  temperature = 0.6
-) {
-  // Function to generate request data
-  return {
+  // if functions array provided, include in object
+  if (functions) {body.functions = functions};
+    
+  let reqData = {
     method: "POST",
     headers: req_headers,
-    body: JSON.stringify({
-      model: model,
-      messages: [{ role: "system", content: prompt }],
-      temperature: temperature,
-      functions: functions,
-    }),
-  };
+    body: JSON.stringify(body)
+};
+
+  console.log(reqData)
+  return reqData;
+  
 }
 
 // CREATE QUERY FUNCTIONS ||
@@ -73,8 +63,8 @@ async function generateQuery(query, promptFn) {
   return response.json();
 }
 
-async function functionQuery(prompt, functions) {
-  const reqdata = formatFunctionRequestData(functions, prompt);
+async function generateFunctionQuery(prompt, functions) {
+  const reqdata = formatRequestData(prompt, functions);
   let response = await fetch(URL, reqdata);
   return response.json();
 }
@@ -148,9 +138,9 @@ function search() {
 const searchbutton = document.getElementById("submit");
 searchbutton.addEventListener("click", search);
 
-functionQuery(
+generateFunctionQuery(
   "electrics cars info from the last 5 years and only show me magazines only",
-  refineTextObj
+  [refineTextObj]
 ).then(
   (data) => {
     console.log(data);
