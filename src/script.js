@@ -30,7 +30,26 @@ function formatRequestData(
       model: model,
       messages: [{ role: "system", content: prompt }],
       temperature: temperature,
-      // functions: functions,
+    }),
+  };
+}
+
+function formatFunctionRequestData(
+  functions,
+  prompt,
+  model = "gpt-3.5-turbo",
+  req_headers = HEADERS,
+  temperature = 0.6
+) {
+  // Function to generate request data
+  return {
+    method: "POST",
+    headers: req_headers,
+    body: JSON.stringify({
+      model: model,
+      messages: [{ role: "system", content: prompt }],
+      temperature: temperature,
+      functions: functions,
     }),
   };
 }
@@ -53,7 +72,7 @@ async function generateQuery(query, promptFn) {
 }
 
 async function functionQuery(prompt, functions) {
-  const reqdata = formatRequestData(functions, prompt);
+  const reqdata = formatFunctionRequestData(functions, prompt);
   let response = await fetch(URL, reqdata);
   return response.json();
 }
@@ -119,6 +138,14 @@ function search() {
 const searchbutton = document.getElementById("submit");
 searchbutton.addEventListener("click", search);
 
-// functionQuery("electrics cars", refineTextObj).then((data) => {
-//   console.log(data.choices[0].message.content);
-// });
+functionQuery(
+  "electrics cars info from the last 5 years and only show me magazines only",
+  refineTextObj
+).then(
+  (data) => {
+    console.log(data);
+  },
+  (reason) => {
+    console.error(reason); // Error!
+  }
+);
