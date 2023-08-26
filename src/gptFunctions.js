@@ -4,25 +4,15 @@ let refineTextObj = {
     parameters: {
         type: "object",
         properties: {
-            query: {
-                type: "string",
-                // description: `write me a library search query based on user's query, using appropriate boolean operators, parantheses grouping, and wildcards. Make sure the query is as general as possible. Expand common abbreviations. Exclude date and source type information.
-
-                // Output based on this examples.
-                // User: Poverty in Asia
-                // ChatGPT: Poverty in Asia AND Asian Poverty
-                
-                // User: Electric Cars in Singapore
-                // ChatGPT: ("Electric Cars" OR "Electric Vehicles") AND Singapore
-                // `,
-                description: "library search query to feed back to user."
-            },
             searchcreationdate: {
                 type: "array",
-                description: `Infer start year and end year based on user's query. User: give me results from 2021 to 2023
+                description: `Infer start year and end year based on user's query. Current year is 2023. User: give me results from 2021 to 2023
                 ChatGPT: [2021, 2023]`,
                 items: {
                     type: "string",
+                    pattern: "\d{4}",
+                    minItems: 2,
+                    maxItems: 2,
                 },
             },
             rtype: {

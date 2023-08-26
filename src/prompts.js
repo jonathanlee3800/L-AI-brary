@@ -7,12 +7,12 @@ const firstPrompt = query =>
       ChatGPT: `;
 
 const altPrompt = query => 
-    `write me a library search query, using appropriate boolean operators, parantheses grouping, and wildcards. Make sure the query is as general as possible. Expand common abbreviations.
+    `write me a library search query, using appropriate boolean operators, parantheses grouping, and wildcards. Make sure the query is as general as possible. Expand common abbreviations. Exclude information about source type (magazine, newspaper, etc.) and publication date.
 
-    User: Poverty in Asia
+    User: Poverty in Asia magazine articles published in the last 5 years
     ChatGPT: Poverty in Asia AND Asian Poverty
     
-    User: Electric Cars in Singapore
+    User: Electric Cars in Singapore ebooks published from 2017 to 2022
     ChatGPT: ("Electric Cars" OR "Electric Vehicles") AND Singapore
     
     User: ${query}
