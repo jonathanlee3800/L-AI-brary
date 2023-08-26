@@ -110,6 +110,12 @@ function formatUrl(url, paramObj) {
 }
 
 function search() {
+  const searchInput = document.getElementById("basic-url");
+  const submitButton = document.getElementById("submit");
+  const loadButton = document.getElementById("load");
+  submitButton.style.display = "none";
+  loadButton.style.display = "block";
+
   var search = document.getElementById("basic-url").value;
   generateQuery(search, altPrompt).then((data) => {
     console.log(data.choices[0].message.content);
@@ -132,8 +138,16 @@ function search() {
     chrome.tabs.update({
       url: `https://search.library.smu.edu.sg/discovery/search?query=any,contains,${query}&tab=Everything&search_scope=Everything&vid=65SMU_INST:SMU_NUI&offset=0`,
     });
-  });
-}
+  ;
+  }
+  
+  )
+  submitButton.style.display = "block";
+  loadButton.style.display = "none";
+} 
+ 
+
+
 
 const searchbutton = document.getElementById("submit");
 searchbutton.addEventListener("click", search);
