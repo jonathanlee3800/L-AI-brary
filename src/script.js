@@ -16,6 +16,15 @@ const HEADERS = {
   Authorization: `Bearer ${OPENAI_API_KEY}`,
 };
 
+chrome.storage.onChanged.addListener((changes, namespace) => {
+  for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
+    console.log(
+      `Storage key "${key}" in namespace "${namespace}" changed.`,
+      `Old value was "${oldValue}", new value is "${newValue}".`
+    );
+  }
+});
+
 function formatRequestData(
   prompt,
   model = "gpt-3.5-turbo",
@@ -110,6 +119,7 @@ function formatUrl(url, paramObj) {
 }
 
 function search() {
+  console.log("check session:", chrome.storage.sync.get("selectionText"));
   var search = document.getElementById("basic-url").value;
   generateQuery(search, altPrompt).then((data) => {
     console.log(data.choices[0].message.content);
