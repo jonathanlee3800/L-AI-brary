@@ -20,9 +20,11 @@ const HEADERS = {
 
 function formatRequestData(
   prompt,
+  functions = null,
+  selectedRole = "system",
   model = "gpt-3.5-turbo",
   req_headers = HEADERS,
-  temperature = 0.6
+  temperature = 0.6,
 ) {
   // Function to generate request data
   return {
@@ -30,8 +32,9 @@ function formatRequestData(
     headers: req_headers,
     body: JSON.stringify({
       model: model,
-      messages: [{ role: "system", content: prompt }],
+      messages: [{ role: selectedRole, content: prompt }],
       temperature: temperature,
+      functions: functions
     }),
   };
 }
@@ -46,6 +49,18 @@ async function generateQuery(query, promptFn) {
 
   // Uses formatRequestData to generate request Data
   const requestData = formatRequestData(prompt);
+
+  let response = await fetch(URL, requestData);
+
+  // Promise object which resolves to Javascript Object (converted from JSON response)
+  return response.json();
+}
+
+async function generateQueryWithFunction(query, functions) {
+  // Returns promise object for json response data
+
+  // Uses formatRequestData to generate request Data
+  const requestData = formatRequestData(query, functions);
 
   let response = await fetch(URL, requestData);
 
@@ -75,24 +90,31 @@ function urlToParams(url){
 
 // function takes endpoint url and query object with param key-val pairs and returns full url
 
-function formatUrl(url, paramObj) {
+function formatUrl(url, paramObj, date, rtype) {
   // use URLSearchParams.toString() method
-  let params = new URLSearchParams({
-      query : `any,contains,${paramObj.query}`,
-      tab : paramObj.tab ?? "Everything",
-      search_scope : paramObj.tab ?? "Everything",
-      vid : "65SMU_INST:SMU_NUI",
-      offset : 0,
-      // searchInFullText: true,
+  let obj = {
+    query : `any,contains,${paramObj.query}`,
+    tab : paramObj.tab ?? "Everything",
+    search_scope : paramObj.search_scope ?? "Everything",
+    vid : "65SMU_INST:SMU_NUI",
+    offset : 0,
+    // searchInFullText: true,
 
-  });
+  }
+
+  if (date) {obj.date = date};
+
+  if (rtype) {obj.rtype = rtype};
+
+
+  let params = new URLSearchParams(obj)
 
   let paramString = params.toString();
 
   let resURL = url + paramString; 
 
   // Replace default '+' with SMU's variables
-  // console.log(resURL.replaceAll(/\+/g, "%20").replaceAll(/%2C/g, ","));
+  resURL = resURL.replaceAll(/\+/g, "%20").replaceAll(/%2C/g, ",");
 
   return resURL;
 
@@ -129,11 +151,14 @@ function search() {
 
 const searchbutton = document.getElementById("submit");
 searchbutton.addEventListener("click", search);
-searchbutton.addEventListener("click", () => {
-  chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
-    let url = tabs[0].url;
-    console.log(urlToParams(url));
-    // use `url` here inside the callback because it's asynchronous!
-  });
-})
+// searchbutton.addEventListener("click", () => {
+//   chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
+//     let url = tabs[0].url;
+//     console.log(urlToParams(url));
+//     // use `url` here inside the callback because it's asynchronous!
+//   });
+// })
 
+generateQueryWithFunction("electric cars in Singapore", [refineTextObj]).then(data => {
+  console.log(data)
+});

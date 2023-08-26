@@ -4,20 +4,27 @@ let refineTextObj = {
     "parameters": {
         "type": "object",
         "properties": {
-            "location": {
+            "query": {
                 "type": "string",
-                "description": "The city and state, e.g. San Francisco, CA",
+                "description": `write me a library search query based on user's query, using appropriate boolean operators, parantheses grouping, and wildcards. Make sure the query is as general as possible. Expand common abbreviations.
+
+                User: Poverty in Asia
+                ChatGPT: Poverty in Asia AND Asian Poverty
+                
+                User: Electric Cars in Singapore
+                ChatGPT: ("Electric Cars" OR "Electric Vehicles") AND Singapore`,
             },
-            "format": {
+            "date": {
+                "type": "array",
+                "description": `Infer start year and end year based on user's query. User: give me results from 2021 to 2023
+                ChatGPT: [2021, 2023]`,
+            },
+            "rtype": {
                 "type": "string",
-                "enum": ["celsius", "fahrenheit"],
-                "description": "The temperature unit to use. Infer this from the users location.",
-            },
-            "num_days": {
-                "type": "integer",
-                "description": "The number of days to forecast",
+                "enum": ["magazinearticle", "book_chapters", "articles"],
+                "description": "Choose the appropriate type of resource based on user's query",
             }
         },
-        "required": ["location", "format", "num_days"]
     },
-},
+}
+
