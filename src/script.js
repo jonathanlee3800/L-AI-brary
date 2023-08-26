@@ -33,7 +33,7 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
 function formatRequestData(
   prompt,
   functions = null,
-  model = "gpt-3.5-turbo",
+  model = "gpt-4",
   req_headers = HEADERS,
   temperature = 0.8
 ) {
