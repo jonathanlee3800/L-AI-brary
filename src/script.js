@@ -35,7 +35,7 @@ function formatRequestData(
   functions = null,
   model = "gpt-4",
   req_headers = HEADERS,
-  temperature = 0.8
+  temperature = 0.2
 ) {
   // Function to generate request data
   let body = {
@@ -171,9 +171,11 @@ function responseToParamObj(resData, isFunctionCall=false) {
 
  // get function call and parse to JS Object
   
-  let paramObj
+  let paramObj = {};
   if (isFunctionCall) {
-    paramObj = JSON.parse(message.function_call.arguments);
+    if (message.function_call){
+      paramObj = JSON.parse(message.function_call.arguments);
+    }
   } else {
     paramObj = {query: message.content};
   }

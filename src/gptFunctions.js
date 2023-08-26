@@ -10,6 +10,9 @@ let refineTextObj = {
                 ChatGPT: [2021, 2023]`,
                 items: {
                     type: "string",
+                    pattern: "\d{4}",
+                    minItems: 2,
+                    maxItems: 2,
                 },
             },
             rtype: {
