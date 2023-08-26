@@ -33,28 +33,14 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
 function formatRequestData(
   prompt,
   functions = null,
-  model = "gpt-3.5-turbo",
+  model = "gpt-4",
   req_headers = HEADERS,
   temperature = 0.8
 ) {
   // Function to generate request data
   let body = {
     model: model,
-    messages: [
-      {
-        role: "system",
-        content:
-          "write the user a library search query based on user's input, using appropriate boolean operators, parantheses grouping, and wildcards. Make sure the query is as general as possible. Expand common abbreviations.",
-      },
-      { role: "user", content: "Poverty in Asia" },
-      { role: "assistant", content: "Poverty in Asia AND Asian Poverty" },
-      { role: "user", content: "electric cars in Singapore" },
-      {
-        role: "assistant",
-        content: '("Electric Cars" OR "Electric Vehicles") AND Singapore',
-      },
-      { role: "user", content: prompt },
-    ],
+    messages: [{ role: "user", content: prompt }],
     temperature: temperature,
   };
 
@@ -102,9 +88,9 @@ async function getContentFromRes(data) {
   return data.choices[0].message.content;
 }
 
-async function getMessageFromRes(data) {
+function getMessageFromRes(data) {
   // Returns text content from generateQuery response object
-  let resData = await data;
+  let resData = data;
   return data.choices[0].message;
 }
 
@@ -177,17 +163,23 @@ function showChatHistory(chathistory) {
   });
 }
 
-async function responseToParamObj(resPromise) {
+function responseToParamObj(resData, isFunctionCall=false) {
   // get message from response promise
-  let message = await getMessageFromRes(resPromise);
+  
+  let message = getMessageFromRes(resData);
   console.log(message);
 
-  // get function call and parse to JS Object
-  let args = JSON.parse(message.function_call.arguments);
+ // get function call and parse to JS Object
+  
+  let paramObj
+  if (isFunctionCall) {
+    paramObj = JSON.parse(message.function_call.arguments);
+  } else {
+    paramObj = {query: message.content};
+  }
 
   // get facets
-  console.log(args);
-  return args;
+  return paramObj;
 }
 
 
@@ -204,12 +196,22 @@ async function searchWithFacets(functions, prompt, promptFn) {
     message: search,
   });
   // response from GPT
-  let res = await generateFunctionQuery(promptFn(prompt), functions);
-  let paramObj = await responseToParamObj(res);
+  let query = await generateQuery(prompt, promptFn)
+  let paramObj = responseToParamObj(query);
+  
+  // response from GPT with function calling
+  let funcRes = await generateFunctionQuery(prompt, functions);
+  console.log("funcRes")
+  console.log(funcRes);
+  let functionParamObj = responseToParamObj(funcRes, true);
+
+  Object.assign(paramObj, functionParamObj);
+
 
   chrome.tabs.update({
     url: formatUrl(SMU_URL, paramObj),
   });
+
   submitButton.style.display = "block";
   loadButton.style.display = "none";
   chathistory.push({
@@ -223,7 +225,7 @@ async function searchWithFacets(functions, prompt, promptFn) {
 const searchbutton = document.getElementById("submit");
 searchbutton.addEventListener("click", () => {
   searchWithFacets(
-    [refineTextObj2],
+    [refineTextObj],
     document.getElementById("basic-url").value,
     altPrompt
   );
