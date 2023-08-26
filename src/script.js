@@ -32,12 +32,19 @@ function formatRequestData(
   functions = null,
   model = "gpt-3.5-turbo",
   req_headers = HEADERS,
-  temperature = 0.6
+  temperature = 0.8
 ) {
   // Function to generate request data
   let body = {
       model: model,
-      messages: [{ role: "system", content: prompt }],
+      messages: [
+          { role: "system", content: "write the user a library search query based on user's input, using appropriate boolean operators, parantheses grouping, and wildcards. Make sure the query is as general as possible. Expand common abbreviations."},
+          { role: "user", content: "Poverty in Asia" },
+          { role: "assistant", content: "Poverty in Asia AND Asian Poverty"},
+          { role: "user", content: "electric cars in Singapore"},
+          { role: "assistant", content: '("Electric Cars" OR "Electric Vehicles") AND Singapore'},
+          { role: "user", content: prompt}
+          ],
       temperature: temperature,
     };
 
@@ -139,11 +146,13 @@ function formatUrl(url, paramObj) {
 async function responseToParamObj(resPromise){
     // get message from response promise
     let message = await getMessageFromRes(resPromise);
+    console.log(message)
 
     // get function call and parse to JS Object
     let args = JSON.parse(message.function_call.arguments);
 
     // get facets
+    console.log(args);
     return args;
 }
 
@@ -174,11 +183,11 @@ function search() {
   });
 }
 
-async function searchWithFacets(functions, prompt){
+async function searchWithFacets(functions, prompt, promptFn){
   // var prompt = document.getElementById("basic-url").value;
   
   // response from GPT
-  let res = await generateFunctionQuery(prompt, functions);
+  let res = await generateFunctionQuery(promptFn(prompt), functions);
   let paramObj = await responseToParamObj(res);
 
   chrome.tabs.update({
@@ -189,21 +198,21 @@ async function searchWithFacets(functions, prompt){
 
 const searchbutton = document.getElementById("submit");
 searchbutton.addEventListener("click", () => {
-  searchWithFacets([refineTextObj], document.getElementById("basic-url").value)
+  searchWithFacets([refineTextObj2], document.getElementById("basic-url").value, altPrompt)
 });
 
-generateFunctionQuery(
-  "search for cars and include book chapters from 2020 to 2022",
-  [refineTextObj]
-).then(
-  (data) => {
-    console.log(data);
-    console.log(formatUrl(SMU_URL, JSON.parse(data.choices[0].message.function_call.arguments)));
-  },
-  (reason) => {
-    console.error(reason); // Error!
-  }
-);
+// generateFunctionQuery(
+//   "search for cars and include book chapters from 2020 to 2022",
+//   [refineTextObj]
+// ).then(
+//   (data) => {
+//     console.log(data);
+//     console.log(formatUrl(SMU_URL, JSON.parse(data.choices[0].message.function_call.arguments)));
+//   },
+//   (reason) => {
+//     console.error(reason); // Error!
+//   }
+// );
 
 
 
