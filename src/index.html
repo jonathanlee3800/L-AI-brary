@@ -62,15 +62,19 @@
           tabindex="0"
         >
         <div class="container-fluid">
-         <h5>Welcome to librarybuddies!<br></h5>
-        <h6>Search from SMU Library's Database</h6>
+         <h5>Welcome to librarybuddies  <button class="btn btn-warning btn-sm" style="margin-left: 40px;" type="button"  id="reset" >
+          <span  role="status" aria-hidden="true"></span>
+          Reset
+        </button>        </h5>
+        <h6><br>Search from SMU Library's Database </h6>
+      
        
           <div id="chathistory" class="list-group mb-3 overflow-auto" style="max-height:200px;">
 
          
         </div>
         <div class="input-group mb-3">
-          <input type="search" class="form-control" placeholder="Search..." id="basic-url" aria-describedby="basic-addon3">
+          <input type="search" class="form-control" placeholder="What do you want to find out..." id="basic-url" aria-describedby="basic-addon3">
           <button class="btn btn-primary" type="button" id="submit" >
             <span  role="status" aria-hidden="true"></span>
             Search
@@ -79,6 +83,7 @@
             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
             Loading...
           </button>          
+          
         </div>
       
         </div>
