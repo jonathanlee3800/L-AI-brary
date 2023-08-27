@@ -181,11 +181,11 @@ function showChatHistory(chathistory) {
       var button = document.createElement("button");
       // button.innerHTML = `Search Query : ${data.message}`;
       var text = document.createElement("span");
-      text.innerHTML = `Search Query : ${data.message}`;
+      text.innerHTML = `${data.message}`;
       text.className = "d-inline-block text-truncate";
       button.className = "list-group-item list-group-item-action";
       button.style = "min-height: 40px;";
-      text.style = "max-width:400px";
+      text.style = "max-width:300px";
       button.appendChild(text);
 
       button.onclick = function () {
@@ -193,6 +193,16 @@ function showChatHistory(chathistory) {
       };
       chatHistoryDiv.appendChild(button);
     }
+  });
+}
+
+const resetButton = document.getElementById("reset");
+resetButton.addEventListener("click", resetHistory);
+
+async function resetHistory() {
+  await chrome.storage.local.set({ chatHistory: [] });
+  chrome.storage.local.get(["chatHistory"]).then((result) => {
+    showChatHistory(result.chatHistory);
   });
 }
 
