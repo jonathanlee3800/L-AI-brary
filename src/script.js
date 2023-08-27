@@ -227,7 +227,7 @@ function responseToParamObj(resData, isFunctionCall = false) {
   return paramObj;
 }
 
-async function searchWithFacets(functions, prompt, promptFn, refine=false) {
+async function searchWithFacets(functions, prompt, promptFn, refine=null) {
   const submitButton = document.getElementById("submit");
   const loadButton = document.getElementById("load");
   submitButton.style.display = "none";
@@ -256,7 +256,7 @@ async function searchWithFacets(functions, prompt, promptFn, refine=false) {
   const chatHistory = await getChatHistory();
   chatHistory.push({
     role: "user",
-    message: prompt,
+    message: refine ?? prompt,
     url: formattedUrl,
   });
   await setChatHistory(chatHistory);
@@ -274,21 +274,22 @@ searchbutton.addEventListener("click", () => {
   );
 });
 
-let currTab = await chrome.tabs.query({active: true, lastFocusedWindow: true})
-let currURL = currTab[0].url;
-let params = new URLSearchParams(currURL.split("?")[1])
-let currQuery = params.get("query").replace(/any,contains,/g, "");
+// let currTab = await chrome.tabs.query({active: true, lastFocusedWindow: true})
+// let currURL = currTab[0].url;
+// let params = new URLSearchParams(currURL.split("?")[1])
+// let currQuery = params.get("query").replace(/any,contains,/g, "");
 
-console.log(currQuery);
+// console.log(currQuery);
 
-let empty = (query) => query;
-if (currQuery.length > 0){
+// let empty = (query) => query;
+// if (currQuery.length > 0){
   
-  console.log("message", currQuery.slice(-1)[0])
-  console.log("currQuery", currQuery)
-  searchWithFacets(
-    [refineTextObj],
-    refinePrompt(currQuery, "exclude crocodile"),
-    empty  
-);
-}
+//   console.log("message", currQuery.slice(-1)[0])
+//   console.log("currQuery", currQuery)
+//   searchWithFacets(
+//     [refineTextObj],
+//     refinePrompt(currQuery, "exclude crocodile"),
+//     empty,
+//     "exclude crocodile" 
+// );
+// }
