@@ -1,7 +1,24 @@
 
 
 const mainPromptFn = query => 
-    `write me a library search query, using appropriate boolean operators, parantheses grouping, and wildcards. Make sure the query is as general as possible. Expand common abbreviations. Exclude information about source type (magazine, newspaper, etc.) and publication date.
+    `write me a library search query, using appropriate boolean operators, parantheses grouping, and wildcards. 
+    Make sure the query is as general as possible. Expand common abbreviations. 
+    Exclude information about source type ("magazinearticle", 
+    "book_chapters", 
+    "articles",
+    "conference_proceedings",
+    "newsletterarticle",
+    "dissertations",
+    "reports",
+    "newspaper_articles",
+    "books",
+    "web_resources",
+    "text_resources",
+    "conference_proceedings",
+    "images",
+    "reference_entrys",
+    "archival_material_manuscripts",
+    "videos") and publication date.
 
     User: Poverty in Asia magazine articles published in the last 5 years
     ChatGPT: Poverty in Asia AND Asian Poverty
