@@ -28,7 +28,7 @@
                 aria-controls="home-tab-pane"
                 aria-selected="true"
               >
-                Main 
+                Home
               </button>
             </li>
             <li class="nav-item" role="presentation">
@@ -42,7 +42,7 @@
                 aria-controls="profile-tab-pane"
                 aria-selected="false"
               >
-                Paragraph 
+                Help
               </button>
             </li>
           </ul>
@@ -58,21 +58,17 @@
           tabindex="0"
         >
         <div class="container-fluid">
-         <h5>Welcome to librarybuddies!<br></h5>
-        <h6>Search from SMU Library's Database</h6>
-       
-          <div id="chathistory" class="list-group mb-3">
-
-         
+        <h5>Welcome to librarybuddies <img src="/assets/mascot.png" style="max-width: 25px;"><br></h5>
+        <div id="chathistory" class="list-group mb-3">
         </div>
         <h6 class="m-1">Search SMU Library's Database</h6>
          <div class="input-group">
-          <input type="search" class="form-control" placeholder="Search..." id="basic-url" aria-describedby="basic-addon3">
-          <button class="btn btn-primary" type="button" id="submit" >
+          <input type="search" class="form-control mb-3" placeholder="Search..." id="basic-url" aria-describedby="basic-addon3">
+          <button class="btn btn-primary mb-3" style="width: 73px;" type="button" id="submit">
             <span  role="status" aria-hidden="true"></span>
             Search
           </button>       
-          <button class="btn btn-primary" type="button" disabled id="load" >
+          <button class="btn btn-primary mb-3" style="width: 73px;" type="button" disabled id="load" >
             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           </button>
         </div>
@@ -85,7 +81,13 @@
           aria-labelledby="profile-tab"
           tabindex="0"
         >
-        hello
+        <h3>librarybuddies help!<h3>
+          <h6>librarybuddies is a browser extension that utilises Open AI's GPT-4 model to enhance users' SMU Libraries search experience</h6>
+          <h7>Enter your search query in the search bar of the pop-up and librarybuddies will direct you to the results of your refined search query</h7>
+          <h5>FAQs</h5>
+          <h8>How does librarybuddies enhance your queries</h8>
+          <h8>Functions</h8>
+          <div style="height: 20px"></div>
         </div>
       </div>
     </div>
