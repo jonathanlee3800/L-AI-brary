@@ -1,36 +1,34 @@
+const mainPromptFn = (query) =>
+  `write me a library search query, using appropriate boolean operators, parantheses grouping, and wildcards.
+  Make sure the query is as general as possible. Expand common abbreviations.
+  Exclude information about source type ("magazinearticle",
+  "book_chapters",
+  "articles",
+  "conference_proceedings",
+  "newsletterarticle",
+  "dissertations",
+  "reports",
+  "newspaper_articles",
+  "books",
+  "web_resources",
+  "text_resources",
+  "conference_proceedings",
+  "images",
+  "reference_entrys",
+  "archival_material_manuscripts",
+  "videos") and publication date.
 
+  User: Poverty in Asia magazine articles published in the last 5 years
+  ChatGPT: Poverty in Asia AND Asian Poverty
 
-const mainPromptFn = query => 
-    `write me a library search query, using appropriate boolean operators, parantheses grouping, and wildcards. 
-    Make sure the query is as general as possible. Expand common abbreviations. 
-    Exclude information about source type ("magazinearticle", 
-    "book_chapters", 
-    "articles",
-    "conference_proceedings",
-    "newsletterarticle",
-    "dissertations",
-    "reports",
-    "newspaper_articles",
-    "books",
-    "web_resources",
-    "text_resources",
-    "conference_proceedings",
-    "images",
-    "reference_entrys",
-    "archival_material_manuscripts",
-    "videos") and publication date.
+  User: Electric Cars in Singapore ebooks published from 2017 to 2022
+  ChatGPT: ("Electric Cars" OR "Electric Vehicles") AND Singapore
 
-    User: Poverty in Asia magazine articles published in the last 5 years
-    ChatGPT: Poverty in Asia AND Asian Poverty
-    
-    User: Electric Cars in Singapore ebooks published from 2017 to 2022
-    ChatGPT: ("Electric Cars" OR "Electric Vehicles") AND Singapore
-    
-    User: ${query}
-    ChatGPT:`;
-    
-const paragraphPrompt = query => 
-    `Following the given text excerpt, your task is to extract the primary themes and topics present within the text. 
+  User: ${query}
+  ChatGPT:`;
+
+const paragraphPrompt = (query) =>
+  `Following the given text excerpt, your task is to extract the primary themes and topics present within the text. 
     Formulate a search query that could be used in a library search, incorporating the identified main themes. 
     Your query should employ suitable boolean operators (AND, OR), use parentheses for grouping, 
     and integrate wildcards when needed. Aim for a broad and all-encompassing query. 
@@ -52,8 +50,8 @@ const paragraphPrompt = query =>
     User: ${query}
     ChatGPT:`;
 
-const refinePrompt = (query, refine) => 
-    `refine the given search query based on the user's instructions. Use appropriate boolean operators, parantheses grouping, and wildcards. Expand common abbreviations.
+const refinePrompt = (query, refine) =>
+  `refine the given search query based on the user's instructions. Use appropriate boolean operators, parantheses grouping, and wildcards. Expand common abbreviations.
 
     Query: Poverty in Asia AND Asian Poverty
     User: I want to see more relating to Southeast Asia
@@ -71,11 +69,9 @@ const refinePrompt = (query, refine) =>
     User: ${refine}
     ChatGPT:`;
 
-
 //   const prompt = `generate keywords for my prompt. suggest keywords that may relate to the search query, keep important queries in the front that directly relate to the query. seperate these keywords with "OR" and keep it to 10 keywords
 //     User: Poverty in Asia
 //     ChatGPT: "Poverty in Asia" OR "Asian poverty rates" OR "poverty reduction initiatives Asia" OR "poverty statistics" OR "economic inequality Asia" OR "poverty alleviation programs" OR "Asia developing countries" OR "poverty challenges Asia" OR "rural poverty Asia" OR "urban poverty Asia"
 
 //     User: ${query}
 //     ChatGPT: `;
-
