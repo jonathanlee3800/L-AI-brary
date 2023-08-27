@@ -6,7 +6,7 @@ let refineTextObj = {
         properties: {
             searchcreationdate: {
                 type: "array",
-                description: `start year and end year based on user's query. Only return if sure there is a year. Current year is 2023. example output: [2021, 2023]`,
+                description: `start year and end year based on user's query. Only return if sure there is a year. Current year is 2023. example output: [2021, 2023]. DO NOT include if user does not mention it.`,
                 items: {
                     type: "integer",
                     minimum: 1000,
@@ -17,10 +17,25 @@ let refineTextObj = {
             },
             rtype: {
                 type: "array",
-                description: "Choose the appropriate types of resource (magazine articles, books, etc.) if the user mentions it.",
+                description: "Choose the appropriate types of resource (magazine articles, books, etc.) if the user mentions it. DO NOT include if user does not mention it.",
                 items: {
                     type: "string",
-                    enum: ["magazinearticle", "book_chapters", "articles"],
+                    enum: ["magazinearticle", 
+                            "book_chapters", 
+                            "articles",
+                            "conference_proceedings",
+                            "newsletterarticle",
+                            "dissertations",
+                            "reports",
+                            "newspaper_articles",
+                            "books",
+                            "web_resources",
+                            "text_resources",
+                            "conference_proceedings",
+                            "images",
+                            "reference_entrys",
+                            "archival_material_manuscripts",
+                            "videos"],
                 }
             },
             // relatedTopics: {
