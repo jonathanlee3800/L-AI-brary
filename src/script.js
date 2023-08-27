@@ -23,7 +23,7 @@ const HEADERS = {
 
 chrome.storage.local.get(["chatHistory"]).then((result) => {
   showChatHistory(result.chatHistory);
-})
+});
 
 chrome.storage.sync.onChanged.addListener((changes, namespace) => {
   for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
@@ -178,8 +178,15 @@ function showChatHistory(chathistory) {
   chathistory.forEach((data) => {
     if (data.role == "user") {
       var button = document.createElement("button");
-      button.innerHTML = `Search Query : ${data.message}`;
+      // button.innerHTML = `Search Query : ${data.message}`;
+      var text = document.createElement("span");
+      text.innerHTML = `Search Query : ${data.message}`;
+      text.className = "d-inline-block text-truncate";
       button.className = "list-group-item list-group-item-action";
+      button.style = "min-height: 40px;";
+      text.style = "max-width:400px";
+      button.appendChild(text);
+
       button.onclick = function () {
         searchPrev(data.url);
       };
