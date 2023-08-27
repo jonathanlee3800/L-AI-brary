@@ -195,6 +195,24 @@ function showChatHistory(chathistory) {
     }
   });
 }
+const refineswitch = document.getElementById("flexSwitchCheckDefault");
+refineswitch.addEventListener("change", switchtextbox);
+function switchtextbox() {
+  console.log(refineswitch.checked);
+  if (refineswitch.checked == true) {
+    console.log("HI");
+    document.getElementById("submit").innerHTML = "Refine";
+    document
+      .getElementById("basic-url")
+      .setAttribute("placeholder", "Refine your search");
+  } else {
+    console.log("BYE");
+    document.getElementById("submit").innerHTML = "Search";
+    document
+      .getElementById("basic-url")
+      .setAttribute("placeholder", "What would you like to find out...");
+  }
+}
 
 const resetButton = document.getElementById("reset");
 resetButton.addEventListener("click", resetHistory);
@@ -227,7 +245,7 @@ function responseToParamObj(resData, isFunctionCall = false) {
   return paramObj;
 }
 
-async function searchWithFacets(functions, prompt, promptFn, refine=null) {
+async function searchWithFacets(functions, prompt, promptFn, refine = null) {
   const submitButton = document.getElementById("submit");
   const loadButton = document.getElementById("load");
   submitButton.style.display = "none";
@@ -283,13 +301,13 @@ searchbutton.addEventListener("click", () => {
 
 // let empty = (query) => query;
 // if (currQuery.length > 0){
-  
+
 //   console.log("message", currQuery.slice(-1)[0])
 //   console.log("currQuery", currQuery)
 //   searchWithFacets(
 //     [refineTextObj],
 //     refinePrompt(currQuery, "exclude crocodile"),
 //     empty,
-//     "exclude crocodile" 
+//     "exclude crocodile"
 // );
 // }
