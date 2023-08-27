@@ -283,31 +283,39 @@ async function searchWithFacets(functions, prompt, promptFn, refine = null) {
   showChatHistory(chatHistory);
 }
 
+const checkbox = document.querySelector("#flexSwitchCheckDefault");
+// checkbox.addEventListener("click", () => {
+
+// })
+
 const searchbutton = document.getElementById("submit");
-searchbutton.addEventListener("click", () => {
-  searchWithFacets(
-    [refineTextObj],
-    document.getElementById("basic-url").value,
-    mainPromptFn
-  );
+searchbutton.addEventListener("click", async function () {
+  let searchVal = document.getElementById("basic-url").value;
+  let checked = document.querySelector("#flexSwitchCheckDefault").checked;
+
+  if (checked) {
+    let currTab = await chrome.tabs.query({
+      active: true,
+      lastFocusedWindow: true,
+    });
+    let currURL = currTab[0].url;
+    let params = new URLSearchParams(currURL.split("?")[1]);
+    let currQuery = params.get("query").replace(/any,contains,/g, "");
+
+    console.log(currQuery);
+
+    let empty = (query) => query;
+    if (currQuery.length > 0) {
+      console.log("message", currQuery.slice(-1)[0]);
+      console.log("currQuery", currQuery);
+      searchWithFacets(
+        [refineTextObj],
+        refinePrompt(currQuery, searchVal),
+        empty,
+        searchVal
+      );
+    }
+  } else {
+    searchWithFacets([refineTextObj], searchVal, mainPromptFn);
+  }
 });
-
-// let currTab = await chrome.tabs.query({active: true, lastFocusedWindow: true})
-// let currURL = currTab[0].url;
-// let params = new URLSearchParams(currURL.split("?")[1])
-// let currQuery = params.get("query").replace(/any,contains,/g, "");
-
-// console.log(currQuery);
-
-// let empty = (query) => query;
-// if (currQuery.length > 0){
-
-//   console.log("message", currQuery.slice(-1)[0])
-//   console.log("currQuery", currQuery)
-//   searchWithFacets(
-//     [refineTextObj],
-//     refinePrompt(currQuery, "exclude crocodile"),
-//     empty,
-//     "exclude crocodile"
-// );
-// }
