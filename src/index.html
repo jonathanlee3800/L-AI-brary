@@ -4,21 +4,17 @@
     <script src="gptFunctions.js" defer></script>
     <script src="prompts.js" defer></script>
     <script src="script.js" type="module" defer></script>
-    <script
-      src="bootstrap-5.3.1-dist/js/bootstrap.bundle.min.js"
-      defer
-    ></script>
+    <script src="bootstrap-5.3.1-dist/js/bootstrap.bundle.min.js" defer></script>
     <link rel="stylesheet" href="bootstrap-5.3.1-dist/css/bootstrap.min.css" />
-   
     <title>librarybuddies</title>
     <meta charset="utf-8" />
   </head>
   <body style="min-width: 400px; min-height: auto;">
     <nav class="navbar navbar-light" style="background-color:#e9e9e9;">
-      <div class="container">
-          <a class="navbar-brand" href="https://library.smu.edu.sg" style="padding-left: 20px;">
-            <img src="/assets/logo-t-smu.svg" alt="Logo" height="40">
-            <img src="/assets/logo-dt-library.svg" alt="Logo" height="40">
+      <div class="container d-flex justify-content-between align-items-center">
+          <a class="navbar-brand p-1" href="https://library.smu.edu.sg">
+            <img src="/assets/logo-t-smu.svg" alt="Logo" height="40px">
+            <img src="/assets/logo-dt-library.svg" alt="Logo" height="40px">
           </a>
           <ul class="nav nav-pills" id="myTab" role="tablist" >
             <li class="nav-item" role="presentation">
@@ -32,7 +28,7 @@
                 aria-controls="home-tab-pane"
                 aria-selected="true"
               >
-                Main 
+                Home
               </button>
             </li>
             <li class="nav-item" role="presentation">
@@ -46,7 +42,7 @@
                 aria-controls="profile-tab-pane"
                 aria-selected="false"
               >
-                Paragraph 
+                Help
               </button>
             </li>
           </ul>
@@ -62,25 +58,22 @@
           tabindex="0"
         >
         <div class="container-fluid">
-         <h5>Welcome to librarybuddies!<br></h5>
-        <h6>Search from SMU Library's Database</h6>
-       
-          <div id="chathistory" class="list-group mb-3 overflow-auto" style="max-height:200px;">
-
-         
+        <h5>Your librarybuddy <img src="/assets/mascot.png" style="max-width: 25px; margin-right: 10px;"><button style='margin-left: 51px;' class="btn btn-warning btn-sm" type="button" id="reset">
+        <span role="status" aria-hidden="true"></span>Clear History</button><br></h5>
+        <div id="chathistory" class="list-group mb-3 overflow-auto" style="max-height:200px;">
         </div>
-        <div class="input-group mb-3">
-          <input type="search" class="form-control" placeholder="Search..." id="basic-url" aria-describedby="basic-addon3">
-          <button class="btn btn-primary" type="button" id="submit" >
+        <h6 class="m-1">Search SMU Library's Database</h6>
+         <div class="input-group">
+          <input type="search" class="form-control mb-3" placeholder="What would you like to find out..." id="basic-url" aria-describedby="basic-addon3">
+          <button class="btn btn-primary mb-3" style="width: 73px;" type="button" id="submit">
             <span  role="status" aria-hidden="true"></span>
             Search
           </button>       
-          <button class="btn btn-primary" type="button" disabled id="load" >
+          <button class="btn btn-primary mb-3" style="width: 73px;" type="button" disabled id="load" >
             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-            Loading...
           </button>          
+          
         </div>
-      
         </div>
       </div>
         <div
@@ -90,9 +83,12 @@
           aria-labelledby="profile-tab"
           tabindex="0"
         >
-        hello
+        <div style="color: #151C55; font-weight: bolder;"><h3>librarybuddies HELP!<h3></div>
+          <h6 style="font-weight: 600">librarybuddy is a browser extension that utilises OpenAI's GPT-4 model to enhance users' SMU Libraries search experience</h6>
+          <h7>Simply enter your search query in the search bar of the pop-up and your librarybuddy will direct you to the results of your refined search query</h7>
+          <div style="height: 20px"></div>
         </div>
-       
       </div>
+    </div>
   </body>
 </html>
