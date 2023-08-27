@@ -52,24 +52,24 @@ const paragraphPrompt = query =>
     User: ${query}
     ChatGPT:`;
 
-// const refinePrompt = (query, refine) => 
-//     `refine the given search query based on the user's instructions. Use appropriate boolean operators, parantheses grouping, and wildcards. Expand common abbreviations.
+const refinePrompt = (query, refine) => 
+    `refine the given search query based on the user's instructions. Use appropriate boolean operators, parantheses grouping, and wildcards. Expand common abbreviations.
 
-//     Query: Poverty in Asia AND Asian Poverty
-//     User: I want to see more relating to Southeast Asia
-//     ChatGPT: Poverty in Asia AND Asian Poverty AND (Southeast Asia OR ASEAN)
+    Query: Poverty in Asia AND Asian Poverty
+    User: I want to see more relating to Southeast Asia
+    ChatGPT: Poverty in Asia AND Asian Poverty AND (Southeast Asia OR ASEAN)
     
-//     Query: ("presidential elections" OR "presidential polls" OR "presidential campaigns") AND Singapore
-//     User: I want to see less results on Indonesia
-//     ChatGPT: ("presidential elections" OR "presidential polls" OR "presidential campaigns") AND Singapore NOT Indonesia
+    Query: ("presidential elections" OR "presidential polls" OR "presidential campaigns") AND Singapore
+    User: I want to see less results on Indonesia
+    ChatGPT: ("presidential elections" OR "presidential polls" OR "presidential campaigns") AND Singapore NOT Indonesia
     
-//     Query: Electric Cars in Singapore
-//     User: I want to see more results about buses specifically
-//     ChatGPT:  ("Electric Cars" OR "Electric Vehicles") AND Singapore AND bus*
+    Query: Electric Cars in Singapore
+    User: I want to see more results about buses specifically
+    ChatGPT:  ("Electric Cars" OR "Electric Vehicles") AND Singapore AND bus*
     
-//     Query: ${query}
-//     User: ${refine}
-//     ChatGPT:`;
+    Query: ${query}
+    User: ${refine}
+    ChatGPT:`;
 
 
 //   const prompt = `generate keywords for my prompt. suggest keywords that may relate to the search query, keep important queries in the front that directly relate to the query. seperate these keywords with "OR" and keep it to 10 keywords
@@ -78,3 +78,4 @@ const paragraphPrompt = query =>
 
 //     User: ${query}
 //     ChatGPT: `;
+
