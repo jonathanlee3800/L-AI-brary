@@ -62,7 +62,13 @@
         <span role="status" aria-hidden="true"></span>Clear History</button><br></h5>
         <div id="chathistory" class="list-group mb-3 overflow-auto" style="max-height:200px;">
         </div>
-        <h6 class="m-1">Search SMU Library's Database</h6>
+        <div class="d-flex flex-row">
+          <h6 class="m-1">Search SMU Library's Database</h6>
+          <div class="form-check form-switch" style="padding-left: 70px;">
+            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+            <label class="form-check-label" for="flexSwitchCheckDefault">Refine</label>
+          </div>
+        </div>        
          <div class="input-group">
           <input type="search" class="form-control mb-3" placeholder="What would you like to find out..." id="basic-url" aria-describedby="basic-addon3">
           <button class="btn btn-primary mb-3" style="width: 73px;" type="button" id="submit">
