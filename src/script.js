@@ -15,11 +15,15 @@ const SMU_URL = "https://search.library.smu.edu.sg/discovery/search?";
 const loadButton = document.getElementById("load");
 loadButton.style.display = "none";
 //chatlog
-var chathistory = [];
+
 const HEADERS = {
   "Content-Type": "application/json",
   Authorization: `Bearer ${OPENAI_API_KEY}`,
 };
+
+chrome.storage.local.get(["chatHistory"]).then((result) => {
+  showChatHistory(result.chatHistory);
+})
 
 chrome.storage.sync.onChanged.addListener((changes, namespace) => {
   for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
@@ -28,14 +32,13 @@ chrome.storage.sync.onChanged.addListener((changes, namespace) => {
       `Old value was "${oldValue}", new value is "${newValue}".`
     );
   }
-  console.log("changes:",changes.selectionText.newValue);
-  console.log("namespace:",namespace);
+  console.log("changes:", changes.selectionText.newValue);
+  console.log("namespace:", namespace);
   searchWithFacets(
     [refineTextObj],
     changes.selectionText.newValue,
     paragraphPrompt
   );
-
 });
 
 function formatRequestData(
@@ -158,6 +161,16 @@ function searchPrev(queryparam) {
     url: queryparam,
   });
 }
+
+async function setChatHistory(array) {
+  await chrome.storage.local.set({ chatHistory: array });
+}
+
+async function getChatHistory() {
+  const chatHistory = await chrome.storage.local.get(["chatHistory"]);
+  console.log(chatHistory, "chrome local storage");
+  return chatHistory.chatHistory;
+}
 //show chathistory
 function showChatHistory(chathistory) {
   const chatHistoryDiv = document.getElementById("chathistory");
@@ -198,7 +211,6 @@ function responseToParamObj(resData, isFunctionCall = false) {
 }
 
 async function searchWithFacets(functions, prompt, promptFn) {
-  // var prompt = document.getElementById("basic-url").value;
   const submitButton = document.getElementById("submit");
   const loadButton = document.getElementById("load");
   submitButton.style.display = "none";
@@ -224,14 +236,16 @@ async function searchWithFacets(functions, prompt, promptFn) {
 
   submitButton.style.display = "block";
   loadButton.style.display = "none";
-  chathistory.push({
+  const chatHistory = await getChatHistory();
+  chatHistory.push({
     role: "user",
-    message: search,
+    message: prompt,
     url: formattedUrl,
   });
+  await setChatHistory(chatHistory);
 
-  console.log(chathistory, "CHATHISTORY");
-  showChatHistory(chathistory);
+  console.log(chatHistory, "CHATHISTORY");
+  showChatHistory(chatHistory);
 }
 
 const searchbutton = document.getElementById("submit");

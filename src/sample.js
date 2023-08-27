@@ -1,4 +1,3 @@
-
 // A generic onclick callback function.
 chrome.contextMenus.onClicked.addListener(returnMessage);
 function returnMessage(info, tab) {
@@ -30,11 +29,10 @@ function returnMessage(info, tab) {
 // };
 
 chrome.runtime.onInstalled.addListener(function () {
-    chrome.contextMenus.create({
-        id: "SMUSEARCH",
-        title: "Generate Insights with'\"%s\"",
-        contexts: ["selection"]
-    });
+  chrome.contextMenus.create({
+    id: "SMUSEARCH",
+    title: 'Generate Insights with\'"%s"',
+    contexts: ["selection"],
+  });
+  chrome.storage.local.set({ chatHistory: [] });
 });
-
-
