@@ -2,7 +2,7 @@
 
 
 ### About
-LibraryBuddies is an chrome extension built to assist users in querying research databases. This chrome extension takes in a natural language prompt from the user and converts it into a search strategy.<br/>
+LibraryBuddies is a chrome extension built to assist users in querying research databases. This chrome extension takes in a natural language prompt from the user and converts it into a search strategy.<br/>
 When querying with natural language, the GPT4 model is instructed to convert the user's prompt into a search strategy, by identifying critical themes and main points that will satisfy the user's input.
 
 As a user, you can type a natural language query such as: "Show me the environmental impacts of green energy". You can also highlight a text to use the Generate Insights feature.
