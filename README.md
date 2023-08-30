@@ -8,10 +8,10 @@ In this current build, the LibraryBuddies extension queries the Singapore Manage
 
 ### Authors
 This original authors of this repository are:
-Sean Lim<br>
-Marcus Yap Sai Wei<br>
-Jonathan Lee Kwee Shyang <br>
-Matthias Lee Jie Kang<br>
+Sean Lim<br/>
+Marcus Yap Sai Wei<br/>
+Jonathan Lee Kwee Shyang <br/>
+Matthias Lee Jie Kang<br/>
 
 
 
